@@ -8,29 +8,28 @@ sudo docker run -v $PWD:$PWD -w $PWD --rm -it dgarrimar/epigenomics_course  # Ru
 
 git clone https://github.com/bborsari/epigenomics_uvic                      # Clone the repository with ATAC-seq folder
 
-ls                   						   			    # I list the files in this repository, I have to mode to epigenomics_uvic folder
+ls                   						   			                                    # I list the files in this repository, I have to mode to epigenomics_uvic folder
 
-cd epigenomics_uvic						   			    # Move to epigenomics_uvic folder
+cd epigenomics_uvic						   			                                      # Move to epigenomics_uvic folder
 
-ls 									 			    # I list the files in this repository, I have to move to ATAC-seq folder
+ls 									 			                                                  # I list the files in this repository, I have to move to ATAC-seq folder
 
-cd ATAC-seq								 			    # Move to ATAC-seq folder
+cd ATAC-seq								 			                                            # Move to ATAC-seq folder
 
 mkdir analyses                                                              # Create an analyses folder into ATAC-seq folder
-mkdir analyses/peak.analyses								    # Create a peak.analyses folder into analyses folder to store peak analyses results
+mkdir analyses/peak.analyses								                                # Create a peak.analyses folder into analyses folder to store peak analyses results
 
-mkdir data											    # Create a data folder into ATAC-seq folder
-mkdir data/bigBed.files									    # Create a bigBed.files folder into data folder to store bigWed files
-mkdir data/Bed.files 									    # Create a Bed.files folder into data folder to store Bed files
-
-mkdir annotation										    # Create an annotation folder
+mkdir data											                                            # Create a data folder into ATAC-seq folder
+mkdir data/bigBed.files									                                    # Create a bigBed.files folder into data folder to store bigWed files
+mkdir data/Bed.files 									                                      # Create a Bed.files folder into data folder to store Bed files
+mkdir annotation										                                        # Create an annotation folder
 
 # Task 4.2. Retrieve from a newly generated metadata file ATAC-seq peaks (bigBed narrow, pseudoreplicated peaks, assembly GRCh38) for stomach and sigmoid_colon for the same donor used in the previous sections. Hint: have a look at what we did here. Make sure your md5sum values coincide with the ones provided by ENCODE.
 
 ## Download the metadata
 ../bin/download.metadata.sh "https://www.encodeproject.org/metadata/?replicates.library.biosample.donor.uuid=d370683e-81e7-473f-8475-7716d027849b&status=released&status=submitted&status=in+progress&assay_slims=DNA+accessibility&assay_title=ATAC-seq&biosample_ontology.term_name=sigmoid+colon&biosample_ontology.term_name=stomach&type=Experiment"									               
 
-head -1 metadata.tsv | awk 'BEGIN{FS=OFS="\t"}{for (i=1;i<=NF;i++){print $i, i}}' # Have a general overview of metadata.tsv
+head -1 metadata.tsv | awk 'BEGIN{FS=OFS="\t"}{for (i=1;i<=NF;i++){print $i, i}}'                       # Have a general overview of metadata.tsv
 
 ## Download the bigBed narrow, pseudoreplicated peak and GRCh38 assembly from stomach and sigmoid_colon data 
 
@@ -43,7 +42,7 @@ sort -k2,2 -u > analyses/bigBed.peaks.ids.txt
 
 cut -f1 analyses/bigBed.peaks.ids.txt |\
 while read filename; do 
-wget -P data/bigBed.files "https://www.encodeproject.org/files/$filename/@@download/$filename.bigBed"    # Obtain the IDs of the files
+wget -P data/bigBed.files "https://www.encodeproject.org/files/$filename/@@download/$filename.bigBed"   # Obtain the IDs of the files
 done
 
 ## MD5sum
