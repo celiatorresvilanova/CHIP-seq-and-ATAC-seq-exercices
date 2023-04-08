@@ -8,23 +8,26 @@ sudo docker run -v $PWD:$PWD -w $PWD --rm -it dgarrimar/epigenomics_course  # Ru
 
 git clone https://github.com/bborsari/epigenomics_uvic                      # Clone the repository with ATAC-seq folder
 
-ls                   						   			                                   
-cd epigenomics_uvic						   			                                     
-ls 									 			                                                  
-cd ATAC-seq								 			                                            
+ls                   						   			    
+cd epigenomics_uvic						   			   
+ls 							
+cd ATAC-seq								 	
+
 mkdir analyses                                                             
-mkdir analyses/peak.analyses								                               
-mkdir data											                                            
-mkdir data/bigBed.files									                                    
-mkdir data/Bed.files 									                                      
-mkdir annotation										                                        
+mkdir analyses/peak.analyses								 
+
+mkdir data											    
+mkdir data/bigBed.files									    
+mkdir data/Bed.files 									    
+
+mkdir annotation										  
 
 # Task 4.2. Retrieve from a newly generated metadata file ATAC-seq peaks (bigBed narrow, pseudoreplicated peaks, assembly GRCh38) for stomach and sigmoid_colon for the same donor used in the previous sections. Hint: have a look at what we did here. Make sure your md5sum values coincide with the ones provided by ENCODE.
 
 ## Download the metadata
 ../bin/download.metadata.sh "https://www.encodeproject.org/metadata/?replicates.library.biosample.donor.uuid=d370683e-81e7-473f-8475-7716d027849b&status=released&status=submitted&status=in+progress&assay_slims=DNA+accessibility&assay_title=ATAC-seq&biosample_ontology.term_name=sigmoid+colon&biosample_ontology.term_name=stomach&type=Experiment"									               
 
-head -1 metadata.tsv | awk 'BEGIN{FS=OFS="\t"}{for (i=1;i<=NF;i++){print $i, i}}'                       # Have a general overview of metadata.tsv
+head -1 metadata.tsv | awk 'BEGIN{FS=OFS="\t"}{for (i=1;i<=NF;i++){print $i, i}}' # Have a general overview of metadata.tsv
 
 ## Download the bigBed narrow, pseudoreplicated peak and GRCh38 assembly from stomach and sigmoid_colon data 
 
@@ -37,7 +40,7 @@ sort -k2,2 -u > analyses/bigBed.peaks.ids.txt
 
 cut -f1 analyses/bigBed.peaks.ids.txt |\
 while read filename; do 
-wget -P data/bigBed.files "https://www.encodeproject.org/files/$filename/@@download/$filename.bigBed"   # Obtain the IDs of the files
+wget -P data/bigBed.files "https://www.encodeproject.org/files/$filename/@@download/$filename.bigBed"    # Obtain the IDs of the files
 done
 
 ## MD5sum
@@ -93,19 +96,14 @@ wget -P annotation https://www.encodeproject.org/files/gencode.v24.primary_assem
 gunzip annotation/gencode.v24.primary_assembly.annotation.gtf.gz 
 
 ### Obtain the protein coding gene body    
-awk '$3=="gene"' annotation/gencode.v24.primary_assembly.annotation.gtf |\   
-grep -F "protein_coding" |\
-cut -d ";" -f1 |\
-awk 'BEGIN{OFS="\t"}{print $1, $4, $5, $10, 0, $7, $10}' |\
-sed 's/\"//g' |\
-awk 'BEGIN{FS=OFS="\t"}$1!="chrM"{$2=($2-1); print $0}' > annotation/gencode.v24.protein.coding.gene.body.bed 
+awk '$3=="gene"' annotation/gencode.v24.primary_assembly.annotation.gtf | grep -F "protein_coding" | cut -d ";" -f1 | awk 'BEGIN{OFS="\t"}{print $1, $4, $5, $10, 0, $7, $10}' | sed 's/\"//g' | awk 'BEGIN{FS=OFS="\t"}$1!="chrM"{$2=($2-1); print $0}' > annotation/gencode.v24.protein.coding.gene.body.bed
 
 cut -f-2 analyses/bigBed.peaks.ids.txt |\
 while read filename tissue; do 
   bedtools intersect -a data/Bed.files/"$filename".bed -b annotation/gencode.v24.protein.coding.gene.body.bed -v |\
   sort -u > analyses/peak.analyses/genes.with.peaks.outside.gene."$tissue".txt
 done
-c
+
 wc -l analyses/peak.analyses/genes.with.peaks.outside*
 
 ### ANSWER: I obtain 37035 peaks that fall outside gene coordinates in sigmoid colon tissue, 34537 peaks that fall outside gene coordinates in stomach tissue and 71572 peaks that fall outside gene coordinates in total.
