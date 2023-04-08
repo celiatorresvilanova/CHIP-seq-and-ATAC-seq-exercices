@@ -7,17 +7,25 @@
 sudo docker run -v $PWD:$PWD -w $PWD --rm -it dgarrimar/epigenomics_course  # Run the docker container
 
 git clone https://github.com/bborsari/epigenomics_uvic                      # Clone the repository with ATAC-seq folder
+
 ls                   						   			                                    # I list the files in this repository, I have to mode to epigenomics_uvic folder
+
 cd epigenomics_uvic						   			                                      # Move to epigenomics_uvic folder
+
 ls 									 			                                                  # I list the files in this repository, I have to move to ATAC-seq folder
+
 cd ATAC-seq								 			                                            # Move to ATAC-seq folder
 
 mkdir analyses                                                              # Create an analyses folder into ATAC-seq folder
+
 mkdir analyses/peak.analyses								                                # Create a peak.analyses folder into analyses folder to store peak analyses results
 
 mkdir data											                                            # Create a data folder into ATAC-seq folder
+
 mkdir data/bigBed.files									                                    # Create a bigBed.files folder into data folder to store bigWed files
+
 mkdir data/Bed.files 									                                      # Create a Bed.files folder into data folder to store Bed files
+
 mkdir annotation										                                        # Create an annotation folder
 
 # Task 4.2. Retrieve from a newly generated metadata file ATAC-seq peaks (bigBed narrow, pseudoreplicated peaks, assembly GRCh38) for stomach and sigmoid_colon for the same donor used in the previous sections. Hint: have a look at what we did here. Make sure your md5sum values coincide with the ones provided by ENCODE.
