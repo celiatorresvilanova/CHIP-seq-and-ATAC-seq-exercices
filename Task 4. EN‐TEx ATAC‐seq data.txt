@@ -13,7 +13,8 @@ cd epigenomics_uvic
 ls 									 			    
 cd ATAC-seq								 			    
 
-mkdir analyses                                                              mkdir analyses/peak.analyses								   
+mkdir analyses
+mkdir analyses/peak.analyses								   
 
 mkdir data											 
 mkdir data/bigBed									   
